@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}My Tasks - MiniTask{% endblock %}
+
+{% block content %}
+
+<div class="card">
+
+    <h2>My Tasks</h2>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        {{ form.title }}
+
+        <button type="submit">
+            Add Task
+        </button>
+    </form>
+
+</div>
+
+
+<div class="task-list">
+
+    {% for task in tasks %}
+
+        <div class="task">
+
+            <span class="{% if task.completed %}completed{% endif %}">
+                {{ task.title }}
+            </span>
+
+            <div>
+
+                <a href="{% url 'complete_task' task.id %}">
+                    {% if task.completed %}
+                        Undo
+                    {% else %}
+                        Complete
+                    {% endif %}
+                </a>
+
+                <a href="{% url 'delete_task' task.id %}">
+                    Delete
+                </a>
+
+            </div>
+
+        </div>
+
+    {% empty %}
+
+        <p>No tasks yet.</p>
+
+    {% endfor %}
+
+</div>
+
+{% endblock %}

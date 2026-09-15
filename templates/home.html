@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Home - MiniTask{% endblock %}
+
+{% block content %}
+
+<section class="hero">
+
+    <h1>MiniTask</h1>
+
+    <p>
+        A simple task manager built with Django.
+    </p>
+
+    {% if user.is_authenticated %}
+        <a class="button" href="/tasks/">
+            View My Tasks
+        </a>
+    {% else %}
+        <a class="button" href="/register/">
+            Get Started
+        </a>
+    {% endif %}
+
+</section>
+
+{% endblock %}
