@@ -1,27 +1,578 @@
 {% extends "base.html" %}
 
-{% block title %}Home - MiniTask{% endblock %}
+{% block title %}Dashboard - Nivqora Task{% endblock %}
 
 {% block content %}
 
-<section class="hero">
+<div class="dashboard">
 
-    <h1>MiniTask</h1>
+    <!-- ================= WELCOME ================= -->
 
-    <p>
-        A simple task manager built with Django.
-    </p>
+    <section class="dashboard-welcome">
+
+        <div class="welcome-content">
+
+            {% if user.is_authenticated %}
+
+                <span class="eyebrow">
+                    YOUR PRODUCTIVITY SPACE
+                </span>
+
+                <h1>
+                    Good to see you,
+                    <span>{{ user.username }}</span> 👋
+                </h1>
+
+                <p>
+                    Organize your work, stay focused,
+                    and turn your plans into progress.
+                </p>
+
+            {% else %}
+
+                <span class="eyebrow">
+                    SMART PRODUCTIVITY
+                </span>
+
+                <h1>
+                    Plan your day.
+                    <span>Achieve more.</span>
+                </h1>
+
+                <p>
+                    Nivqora Task helps you organize your
+                    tasks and stay focused on what matters.
+                </p>
+
+            {% endif %}
+
+        </div>
+
+
+        <div class="welcome-action">
+
+            {% if user.is_authenticated %}
+
+                <a href="/tasks/" class="primary-action">
+                    <span>+</span>
+                    New Task
+                </a>
+
+            {% else %}
+
+                <a href="/register/" class="primary-action">
+                    Get Started
+                    <span>→</span>
+                </a>
+
+            {% endif %}
+
+        </div>
+
+    </section>
+
 
     {% if user.is_authenticated %}
-        <a class="button" href="/tasks/">
-            View My Tasks
-        </a>
-    {% else %}
-        <a class="button" href="/register/">
-            Get Started
-        </a>
-    {% endif %}
+
+    <!-- ================= STATISTICS ================= -->
+
+<section class="stats-grid">
+
+    <div class="stat-card">
+
+        <div class="stat-top">
+            <span class="stat-label">
+                TOTAL TASKS
+            </span>
+
+            <span class="stat-icon purple">
+                ✓
+            </span>
+        </div>
+
+        <div class="stat-number">
+            {{ total_tasks }}
+        </div>
+
+        <div class="stat-description">
+            Your tasks
+        </div>
+
+    </div>
+
+
+    <div class="stat-card">
+
+        <div class="stat-top">
+            <span class="stat-label">
+                COMPLETED
+            </span>
+
+            <span class="stat-icon green">
+                ✓
+            </span>
+        </div>
+
+        <div class="stat-number">
+            {{ completed_tasks }}
+        </div>
+
+        <div class="stat-description">
+            Tasks completed
+        </div>
+
+    </div>
+
+
+    <div class="stat-card">
+
+        <div class="stat-top">
+            <span class="stat-label">
+                PENDING
+            </span>
+
+            <span class="stat-icon orange">
+                ◷
+            </span>
+        </div>
+
+        <div class="stat-number">
+            {{ pending_tasks }}
+        </div>
+
+        <div class="stat-description">
+            Waiting for you
+        </div>
+
+    </div>
+
+
+    <div class="stat-card">
+
+        <div class="stat-top">
+            <span class="stat-label">
+                PRODUCTIVITY
+            </span>
+
+            <span class="stat-icon blue">
+                ↗
+            </span>
+        </div>
+
+        <div class="stat-number">
+            {{ productivity }}%
+        </div>
+
+        <div class="stat-description">
+            Completion rate
+        </div>
+
+    </div>
 
 </section>
+
+
+    <!-- ================= MAIN DASHBOARD GRID ================= -->
+
+    <section class="dashboard-grid">
+
+        <!-- TODAY'S TASKS -->
+
+        <div class="dashboard-card tasks-overview">
+
+            <div class="card-heading">
+
+                <div>
+                    <span class="card-kicker">
+                        FOCUS
+                    </span>
+
+                    <h2>
+                        Today's Tasks
+                    </h2>
+                </div>
+
+                <a href="/tasks/" class="view-link">
+                    View all →
+                </a>
+
+            </div>
+
+
+            <div class="dashboard-task-list">
+
+                {% if todays_tasks %}
+
+                    {% for task in todays_tasks %}
+
+                        <div class="dashboard-task {% if task.completed %}task-done{% endif %}">
+
+                            <div class="task-status">
+
+                                {% if task.completed %}
+                                    ✓
+                                {% else %}
+                                    <span></span>
+                                {% endif %}
+
+                            </div>
+
+                            <div class="task-info">
+
+                                <strong>
+                                    {{ task.title }}
+                                </strong>
+
+                                <span>
+                                    {% if task.completed %}
+                                        Completed
+                                    {% else %}
+                                        Pending
+                                    {% endif %}
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    {% endfor %}
+
+                {% else %}
+
+                    <div class="dashboard-empty">
+
+                        <div class="empty-icon">
+                            ✓
+                        </div>
+
+                        <h3>
+                            No tasks for today
+                        </h3>
+
+                        <p>
+                            Create a task and start turning
+                            your plans into progress.
+                        </p>
+
+                        <a href="/tasks/" class="secondary-action">
+                            Create a Task
+                        </a>
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+
+        <!-- PRODUCTIVITY -->
+
+        <div class="dashboard-card productivity-card">
+
+            <div class="card-heading">
+
+                <div>
+
+                    <span class="card-kicker">
+                        OVERVIEW
+                    </span>
+
+                    <h2>
+                        Productivity
+                    </h2>
+
+                </div>
+
+                <span class="period-badge">
+                    This week
+                </span>
+
+            </div>
+
+
+            <div class="productivity-visual">
+
+                <div class="productivity-ring"
+                    style="--progress: {{ productivity }}%;">
+
+                    <div class="ring-inner">
+
+                        <strong>{{ productivity }}%</strong>
+
+                        <span>
+                            Complete
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="productivity-footer">
+
+                <div>
+                    <span class="mini-label">
+                        COMPLETED
+                    </span>
+
+                    <strong>{{ completed_tasks }}</strong>
+                </div>
+
+                <div>
+                    <span class="mini-label">
+                        PENDING
+                    </span>
+
+                    <strong>{{ pending_tasks }}</strong>
+                </div>
+
+                <div>
+                    <span class="mini-label">
+                        STREAK
+                    </span>
+
+                    <strong>—</strong>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- ================= AI PANEL ================= -->
+
+    <section class="ai-dashboard-card">
+
+        <div class="ai-glow"></div>
+
+        <div class="ai-content">
+
+            <div class="ai-badge">
+                ✦ AI POWERED
+            </div>
+
+            <h2>
+                Work smarter with
+                <span>AI assistance.</span>
+            </h2>
+
+            <p>
+                Break complicated goals into manageable tasks,
+                create focused plans, and get intelligent
+                productivity suggestions.
+            </p>
+
+            <div class="ai-features">
+
+                <div class="ai-feature">
+                    <span>✦</span>
+                    Smart task breakdown
+                </div>
+
+                <div class="ai-feature">
+                    <span>✦</span>
+                    AI daily planning
+                </div>
+
+                <div class="ai-feature">
+                    <span>✦</span>
+                    Productivity insights
+                </div>
+
+            </div>
+
+            <button class="ai-launch-button" type="button">
+                ✦ AI Assistant
+                <span>Coming soon</span>
+            </button>
+
+        </div>
+
+
+        <div class="ai-orbit">
+
+            <div class="orbit-ring orbit-one"></div>
+            <div class="orbit-ring orbit-two"></div>
+
+            <div class="ai-core">
+                ✦
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= QUICK ACTIONS ================= -->
+
+    <section class="quick-section">
+
+        <div class="section-heading">
+
+            <div>
+                <span class="card-kicker">
+                    SHORTCUTS
+                </span>
+
+                <h2>
+                    Quick Actions
+                </h2>
+            </div>
+
+        </div>
+
+
+        <div class="quick-grid">
+
+            <a href="/tasks/" class="quick-card">
+
+                <div class="quick-icon purple-bg">
+                    +
+                </div>
+
+                <div>
+                    <strong>
+                        Create a task
+                    </strong>
+
+                    <span>
+                        Add something to your list
+                    </span>
+                </div>
+
+                <span class="quick-arrow">
+                    →
+                </span>
+
+            </a>
+
+
+            <div class="quick-card quick-disabled">
+
+                <div class="quick-icon ai-bg">
+                    ✦
+                </div>
+
+                <div>
+                    <strong>
+                        Ask AI
+                    </strong>
+
+                    <span>
+                        Get intelligent assistance
+                    </span>
+                </div>
+
+                <span class="coming-label">
+                    SOON
+                </span>
+
+            </div>
+
+
+            <div class="quick-card quick-disabled">
+
+                <div class="quick-icon blue-bg">
+                    ◫
+                </div>
+
+                <div>
+                    <strong>
+                        View analytics
+                    </strong>
+
+                    <span>
+                        Understand your productivity
+                    </span>
+                </div>
+
+                <span class="coming-label">
+                    SOON
+                </span>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    {% else %}
+
+
+    <!-- ================= LOGGED OUT LANDING ================= -->
+
+    <section class="landing-hero">
+
+        <div class="landing-badge">
+            ✦ MODERN PRODUCTIVITY
+        </div>
+
+        <h1>
+            Your tasks.
+            <br>
+            <span>Your momentum.</span>
+        </h1>
+
+        <p>
+            Nivqora Task gives you a clean,
+            focused workspace to organize your
+            everyday work and goals.
+        </p>
+
+        <div class="landing-actions">
+
+            <a href="/register/" class="primary-action">
+                Create your workspace
+                <span>→</span>
+            </a>
+
+            <a href="/login/" class="secondary-action">
+                I already have an account
+            </a>
+
+        </div>
+
+    </section>
+
+
+    <!-- FEATURES -->
+
+    <section class="feature-preview">
+
+        <div class="feature-preview-card">
+            <span>✓</span>
+            <strong>Simple Task Management</strong>
+            <p>
+                Keep your work organized in one place.
+            </p>
+        </div>
+
+        <div class="feature-preview-card">
+            <span>✦</span>
+            <strong>AI Productivity</strong>
+            <p>
+                Intelligent assistance is coming soon.
+            </p>
+        </div>
+
+        <div class="feature-preview-card">
+            <span>◔</span>
+            <strong>Focused Experience</strong>
+            <p>
+                Designed to keep distractions away.
+            </p>
+        </div>
+
+    </section>
+
+    {% endif %}
+
+</div>
 
 {% endblock %}
