@@ -1,5 +1,4 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,30 +7,354 @@
 
     <title>{% block title %}MiniTask{% endblock %}</title>
 
-    <link rel="stylesheet"
-          href="{% static 'css/style.css' %}">
+    <meta name="description"
+          content="Nivqora Task- A modern productivity and task management platform">
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 
 <body>
 
-<nav>
-    <a href="/">MiniTask</a>
+<div class="app-shell">
 
-    <div>
-        {% if user.is_authenticated %}
-            <a href="/tasks/">My Tasks</a>
-            <a href="/logout/">Logout</a>
-        {% else %}
-            <a href="/login/">Login</a>
-            <a href="/register/">Register</a>
-        {% endif %}
+    <!-- ================= SIDEBAR ================= -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+
+            <a href="/" class="brand-link">
+
+                <div class="brand-icon">
+                    ✓
+                </div>
+
+                <div class="brand-text">
+                    <span class="brand-name">Nivqora Task</span>
+                    <span class="brand-tagline">
+                        Plan · Focus · Achieve
+                    </span>
+                </div>
+
+            </a>
+
+        </div>
+
+
+        <!-- MAIN NAVIGATION -->
+
+        <nav class="sidebar-nav">
+
+            <div class="nav-section-label">
+                WORKSPACE
+            </div>
+
+            <a href="/" class="nav-item">
+                <span class="nav-icon">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M3 11.5 12 4l9 7.5"></path>
+                        <path d="M5 10v10h14V10"></path>
+                        <path d="M9 20v-6h6v6"></path>
+                    </svg>
+                </span>
+
+                <span>Dashboard</span>
+            </a>
+
+
+            <a href="/tasks/" class="nav-item">
+                <span class="nav-icon">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <rect x="4" y="4" width="16" height="16" rx="3"></rect>
+                        <path d="M8 9h8"></path>
+                        <path d="M8 13h8"></path>
+                        <path d="M8 17h5"></path>
+                    </svg>
+                </span>
+
+                <span>My Tasks</span>
+            </a>
+
+
+            <!-- Future AI section -->
+            <div class="nav-section-label nav-section-space">
+                INTELLIGENCE
+            </div>
+
+            <div class="nav-item nav-item-disabled">
+                <span class="nav-icon ai-icon">
+                    ✦
+                </span>
+
+                <span>AI Assistant</span>
+
+                <span class="coming-soon">
+                    SOON
+                </span>
+            </div>
+
+
+            <div class="nav-item nav-item-disabled">
+                <span class="nav-icon">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M4 5h16"></path>
+                        <path d="M4 12h16"></path>
+                        <path d="M4 19h16"></path>
+                    </svg>
+                </span>
+
+                <span>Smart Planner</span>
+
+                <span class="coming-soon">
+                    SOON
+                </span>
+            </div>
+
+        </nav>
+
+
+        <!-- SIDEBAR BOTTOM -->
+
+        <div class="sidebar-bottom">
+
+            <div class="nav-section-label">
+                ACCOUNT
+            </div>
+
+
+            {% if user.is_authenticated %}
+
+                <div class="user-mini-card">
+
+                    <div class="user-avatar">
+                        {{ user.username|first|upper }}
+                    </div>
+
+                    <div class="user-mini-info">
+
+                        <strong>
+                            {{ user.username }}
+                        </strong>
+
+                        <span>
+                            Personal workspace
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <a href="/logout/" class="nav-item logout-item">
+
+                    <span class="nav-icon">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M10 17l5-5-5-5"></path>
+                            <path d="M15 12H3"></path>
+                            <path d="M21 4v16"></path>
+                        </svg>
+                    </span>
+
+                    <span>Logout</span>
+
+                </a>
+
+            {% else %}
+
+                <a href="/login/" class="nav-item">
+
+                    <span class="nav-icon">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+                            <path d="M10 17l5-5-5-5"></path>
+                            <path d="M15 12H3"></path>
+                        </svg>
+                    </span>
+
+                    <span>Login</span>
+
+                </a>
+
+
+                <a href="/register/" class="nav-item">
+
+                    <span class="nav-icon">
+                        +
+                    </span>
+
+                    <span>Create Account</span>
+
+                </a>
+
+            {% endif %}
+
+
+            <!-- THEME TOGGLE -->
+
+            <div class="theme-row">
+
+                <div class="theme-label">
+
+                    <span class="theme-icon">
+                        ◐
+                    </span>
+
+                    <span>
+                        Dark Mode
+                    </span>
+
+                </div>
+
+                <label class="toggle">
+
+                    <input type="checkbox" id="theme-toggle">
+
+                    <span class="toggle-slider"></span>
+
+                </label>
+
+            </div>
+
+        </div>
+
+    </aside>
+
+
+    <!-- ================= MAIN AREA ================= -->
+
+    <div class="main-area">
+
+
+        <!-- TOPBAR -->
+
+        <header class="topbar">
+
+            <div class="mobile-brand">
+
+                <a href="/">
+                    <span class="mobile-brand-icon">✓</span>
+                    MiniTask
+                </a>
+
+            </div>
+
+
+            <!-- SEARCH -->
+
+            <div class="global-search">
+
+                <span class="search-icon">
+
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <circle cx="11" cy="11" r="6"></circle>
+                        <path d="m16 16 5 5"></path>
+                    </svg>
+
+                </span>
+
+                <input
+                    type="text"
+                    placeholder="Search tasks, categories..."
+                    aria-label="Search"
+                >
+
+                <span class="search-shortcut">
+                    /
+                </span>
+
+            </div>
+
+
+            <!-- TOPBAR ACTIONS -->
+
+            <div class="topbar-actions">
+
+                <!-- Notification -->
+
+                <button class="icon-button notification-button"
+                        type="button"
+                        aria-label="Notifications">
+
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path>
+                        <path d="M10 21h4"></path>
+                    </svg>
+
+                    <span class="notification-dot"></span>
+
+                </button>
+
+
+                {% if user.is_authenticated %}
+
+                    <div class="top-user">
+
+                        <div class="top-user-avatar">
+                            {{ user.username|first|upper }}
+                        </div>
+
+                        <div class="top-user-info">
+
+                            <strong>
+                                {{ user.username }}
+                            </strong>
+
+                            <span>
+                                Workspace
+                            </span>
+
+                        </div>
+
+                        <span class="user-chevron">
+                            ▾
+                        </span>
+
+                    </div>
+
+                {% else %}
+
+                    <a href="/login/" class="top-login">
+                        Login
+                    </a>
+
+                {% endif %}
+
+            </div>
+
+        </header>
+
+
+        <!-- PAGE CONTENT -->
+
+        <main class="page-content">
+
+            {% block content %}
+            {% endblock %}
+
+        </main>
+
+
+        <!-- FOOTER -->
+
+        <footer class="app-footer">
+
+            <span>
+                © 2026 Nivqora Task
+            </span>
+
+            <span class="footer-dot">
+                ·
+            </span>
+
+            <span>
+                Plan smarter. Work better.
+            </span>
+
+        </footer>
+
     </div>
-</nav>
 
-<main>
-    {% block content %}
-    {% endblock %}
-</main>
+</div>
+
 
 </body>
 </html>
