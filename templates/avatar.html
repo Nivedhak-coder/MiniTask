@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}My Character - Nivqora Task{% endblock %}
+
+{% block content %}
+<div class="avatar-page">
+    <div class="avatar-preview" id="avatar-preview"></div>
+    <form method="POST" class="card avatar-form">
+        {% csrf_token %}
+        <h2>Your Character</h2>
+        {% for field in form %}
+            <label class="avatar-field">{{ field.label }} {{ field }}</label>
+        {% endfor %}
+        <button type="submit">Save character</button>
+    </form>
+</div>
+<div class="card" style="margin-top:20px">
+    <h2>Desktop app key</h2>
+    <input type="text" value="{{ token }}" readonly onclick="this.select()">
+    <form method="POST" action="{% url 'regenerate_token' %}">
+        {% csrf_token %}
+        <button type="submit">Regenerate key</button>
+    </form>
+</div>
+<script src="{% static 'js/avatar.js' %}"></script>
+{% endblock %}

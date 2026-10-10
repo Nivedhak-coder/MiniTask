@@ -1,11 +1,14 @@
+import secrets
+from datetime import timedelta
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import get_object_or_404, redirect, render
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
-
-from .forms import TaskForm
-from .models import Task
+from .forms import AvatarForm, TaskForm
+from .models import Profile, Task
 
 def home(request):
     if request.user.is_authenticated:
@@ -135,3 +138,79 @@ def delete_task(request, task_id):
     task.delete()
 
     return redirect("tasks")
+
+@login_required
+def avatar_view(request):
+    profile, _ = Profile.objects.get_or_create(user=request.user)
+    if not profile.token:
+        profile.token = secrets.token_urlsafe(32)
+        profile.save()
+    if request.method == "POST":
+        form = AvatarForm(request.POST, instance=profile)
+        if form.is_valid():
+            form.save()
+            return redirect("avatar")
+    else:
+        form = AvatarForm(instance=profile)
+    return render(request, "avatar.html", {"form": form, "token": profile.token})
+
+@login_required
+def regenerate_token(request):
+    if request.method == "POST":
+        profile, _ = Profile.objects.get_or_create(user=request.user)
+        profile.token = secrets.token_urlsafe(32)
+        profile.save()
+    return redirect("avatar")
+
+
+def reminders_api(request):
+    token = request.headers.get("Authorization", "").removeprefix("Bearer ").strip()
+    profile = (
+        Profile.objects.filter(token=token).select_related("user").first()
+        if token else None
+    )
+    if not profile:
+        return JsonResponse({"error": "unauthorized"}, status=401)
+
+    due = list(Task.objects.filter(
+        user=profile.user, completed=False, reminded=False,
+        due_at__isnull=False, due_at__lte=timezone.now(),
+    ))
+    Task.objects.filter(id__in=[t.id for t in due]).update(reminded=True)
+
+    return JsonResponse({
+        "username": profile.user.username,
+        "avatar": {
+            "skin": profile.skin, "hair": profile.hair, "eyes": profile.eyes,
+            "outfit": profile.outfit, "hair_style": profile.hair_style,
+            "glasses": profile.glasses, "beard": profile.beard,
+            "tone": profile.tone,
+        },
+        "reminders": [
+            {"id": t.id, "title": t.title,
+            "due": timezone.localtime(t.due_at).strftime("%H:%M")}
+            for t in due
+        ],
+    })
+
+@csrf_exempt
+def reminder_action(request, task_id, action):
+    token = request.headers.get("Authorization", "").removeprefix("Bearer ").strip()
+    profile = Profile.objects.filter(token=token).select_related("user").first() if token else None
+    if not profile:
+        return JsonResponse({"error": "unauthorized"}, status=401)
+    if request.method != "POST":
+        return JsonResponse({"error": "POST only"}, status=405)
+    task = Task.objects.filter(id=task_id, user=profile.user).first()
+    if not task:
+        return JsonResponse({"error": "not found"}, status=404)
+    if action == "done":
+        task.completed = True
+    elif action == "snooze":
+        task.due_at = timezone.now() + timedelta(minutes=10)
+        task.reminded = False
+    else:
+        return JsonResponse({"error": "bad action"}, status=400)
+    task.save()
+    return JsonResponse({"ok": True})
+

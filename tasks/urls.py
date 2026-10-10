@@ -15,4 +15,8 @@ urlpatterns = [
         views.delete_task,
         name="delete_task"
     ),
+    path("avatar/", views.avatar_view, name="avatar"),
+    path("api/reminders/", views.reminders_api, name="reminders_api"),
+    path("avatar/token/", views.regenerate_token, name="regenerate_token"),
+    path("api/reminders/<int:task_id>/<str:action>/", views.reminder_action, name="reminder_action"),
 ]

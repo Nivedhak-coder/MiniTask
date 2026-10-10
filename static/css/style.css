@@ -90,6 +90,7 @@ input {
     border-right: 1px solid var(--border);
 
     z-index: 100;
+    transition: width 0.3s ease;
 }
 /* ================= BRAND ================= */
 .brand {
@@ -341,8 +342,9 @@ input {
     margin-left: var(--sidebar-width);
     display: flex;
     flex-direction: column;
+    transition: margin-left 0.3s ease, width 0.3s ease;
 }
-/* ================= TOPBAR ================= */
+/*================ TOPBAR ================= */
 .topbar {
     height: var(--topbar-height);
     display: flex;
@@ -750,10 +752,11 @@ input::placeholder {
     .brand {
         padding: 2px 4px 25px;
     }
-    .brand-link {
+    .brand {
         justify-content: center;
     }
-    .brand-text {
+    .brand-text,
+    .brand-text-link {
         display: none;
     }
     .nav-section-label,
@@ -961,7 +964,7 @@ input::placeholder {
 }
 .stat-label {
     color: #6e7691;
-    font-size: 8px;
+    font-size: 12px;
     font-weight: 750;
     letter-spacing: 1px;
 }
@@ -999,7 +1002,7 @@ input::placeholder {
 .stat-description {
     margin-top: 3px;
     color: #666e88;
-    font-size: 9px;
+    font-size: 11px;
 }
 /* ================= DASHBOARD GRID ================= */
 .dashboard-grid {
@@ -1672,3 +1675,506 @@ input::placeholder {
     color: #969caf;
     text-decoration: line-through;
 }
+/* =========================================================
+   CHATGPT-STYLE SIDEBAR TOGGLE
+   ========================================================= */
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.brand-icon-wrap {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+.brand-icon-link {
+    display: grid;
+    place-items: center;
+    text-decoration: none;
+}
+.brand-text-link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+}
+.sidebar-toggle {
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    padding: 0;
+    margin-left: auto;
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    border-radius: 9px;
+    background: rgba(255, 255, 255, 0.04);
+    color: #a8aec5;
+    cursor: pointer;
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        border-color 0.2s ease;
+}
+.sidebar-toggle:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.18);
+}
+.sidebar-toggle svg {
+    display: block;
+    width: 18px;
+    height: 18px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+.sidebar-toggle:active {
+    transform: scale(0.94);
+}
+/* =========================================================
+   NIVQORA TASK — CHATGPT STYLE SIDEBAR COLLAPSE
+   ========================================================= */
+
+/* ---------- EXPANDED SIDEBAR ---------- */
+
+.brand {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.brand-icon-wrap {
+    position: relative;
+    width: 36px;
+    height: 36px;
+    flex: 0 0 36px;
+}
+
+.brand-icon-link {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    text-decoration: none;
+}
+.brand-text-link {
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+}
+.sidebar-toggle {
+    width: 34px;
+    height: 34px;
+
+    margin-left: auto;
+    padding: 0;
+
+    flex: 0 0 34px;
+
+    display: grid;
+    place-items: center;
+
+    border: 1px solid rgba(255,255,255,.10);
+    border-radius: 9px;
+
+    background: rgba(255,255,255,.04);
+    color: #a8aec5;
+
+    cursor: pointer;
+
+    transition:
+        background .2s ease,
+        color .2s ease,
+        border-color .2s ease,
+        transform .15s ease;
+}
+
+.sidebar-toggle:hover {
+    background: rgba(118,87,255,.14);
+    color: #ffffff;
+    border-color: rgba(118,87,255,.35);
+}
+
+.sidebar-toggle:active {
+    transform: none;
+}
+
+.sidebar-toggle svg {
+    width: 18px;
+    height: 18px;
+
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+
+/* =========================================================
+   COLLAPSED SIDEBAR
+   ========================================================= */
+
+.app-shell.sidebar-collapsed {
+    --sidebar-width: 72px;
+}
+
+
+/* Sidebar itself */
+
+.app-shell.sidebar-collapsed .sidebar {
+    width: 72px;
+    min-width: 72px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+
+/* Main content MUST resize */
+
+.app-shell.sidebar-collapsed .main-area {
+    width: calc(100% - 72px);
+    margin-left: 72px;
+}
+
+
+/* ---------- BRAND ---------- */
+
+.app-shell.sidebar-collapsed .brand {
+    justify-content: center;
+    width: 100%;
+}
+
+
+/* Hide Nivqora Task text */
+
+.app-shell.sidebar-collapsed .brand-text-link {
+    display: none;
+}
+
+
+/* Keep logo */
+
+.app-shell.sidebar-collapsed .brand-icon-wrap {
+    position: relative;
+
+    width: 36px;
+    height: 36px;
+
+    flex: 0 0 36px;
+}
+
+
+/* Logo */
+
+.app-shell.sidebar-collapsed .brand-icon-link {
+    position: absolute;
+    inset: 0;
+
+    display: grid;
+    place-items: center;
+
+    opacity: 1;
+
+    transition: opacity .15s ease;
+}
+
+
+/* Toggle sits exactly over logo */
+.app-shell.sidebar-collapsed .sidebar-toggle {
+    position: absolute;
+    inset: 0;
+    width: 36px;
+    height: 36px;
+    margin: 0;
+    opacity: 0;
+    pointer-events: none;
+    border: 0;
+    border-radius: 9px;
+    background: #11162b;
+    transition: opacity .15s ease;
+}
+/* Hover logo */
+
+.app-shell.sidebar-collapsed .brand-icon-wrap:hover .brand-icon-link {
+    opacity: 0;
+}
+/* Show sidebar button */
+.app-shell.sidebar-collapsed .brand-icon-wrap:hover .sidebar-toggle {
+    opacity: 1;
+    pointer-events: auto;
+}
+/* =========================================================
+   IMPORTANT:
+   DO NOT HIDE .sidebar-nav
+   KEEP THE ICONS VISIBLE
+   ========================================================= */
+.app-shell.sidebar-collapsed .sidebar-nav {
+    display: flex;
+    flex-direction: column;
+}
+/* Hide section headings */
+
+.app-shell.sidebar-collapsed .nav-section-label {
+    display: none;
+}
+/* Keep each navigation item */
+.app-shell.sidebar-collapsed .nav-item {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 11px 8px;
+
+    gap: 0;
+}
+
+
+/* Hide navigation text */
+
+.app-shell.sidebar-collapsed .nav-item > span:not(.nav-icon) {
+    display: none;
+}
+
+
+/* Keep icons */
+
+.app-shell.sidebar-collapsed .nav-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 22px;
+    min-width: 22px;
+}
+
+
+/* Hide "Coming Soon" text */
+
+.app-shell.sidebar-collapsed .coming-soon {
+    display: none;
+}
+
+
+/* =========================================================
+   BOTTOM SIDEBAR
+   ========================================================= */
+
+.app-shell.sidebar-collapsed .sidebar-bottom {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+/* User information text disappears */
+
+.app-shell.sidebar-collapsed .user-mini-info {
+    display: none;
+}
+
+
+/* Center user card */
+
+.app-shell.sidebar-collapsed .user-mini {
+    justify-content: center;
+}
+
+
+/* Center theme button */
+
+.app-shell.sidebar-collapsed .theme-toggle {
+    justify-content: center;
+}
+
+
+/* Hide theme text */
+
+.app-shell.sidebar-collapsed .theme-label span:last-child {
+    display: none;
+}
+
+
+/* =========================================================
+   DESKTOP ONLY
+   ========================================================= */
+
+@media (min-width: 701px) {
+
+    .app-shell.sidebar-collapsed .sidebar {
+        width: 72px;
+        min-width: 72px;
+    }
+
+    .app-shell.sidebar-collapsed .main-area {
+        width: calc(100% - 72px);
+        margin-left: 72px;
+    }
+}
+
+
+/* =========================================================
+   MOBILE
+   Keep your existing mobile sidebar behavior
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    .app-shell.sidebar-collapsed .sidebar {
+        width: 72px;
+        min-width: 72px;
+    }
+    .app-shell.sidebar-collapsed .main-area {
+        width: calc(100% - 72px);
+        margin-left: 72px;
+    }
+    /* Keep icons */
+    .app-shell.sidebar-collapsed .sidebar-nav {
+        display: flex;
+    }
+}
+/* =========================================================
+   VERY SMALL SCREENS
+   ========================================================= */
+
+@media (max-width: 420px) {
+
+    .app-shell.sidebar-collapsed .sidebar {
+        width: 62px;
+        min-width: 62px;
+    }
+
+    .app-shell.sidebar-collapsed .main-area {
+        width: calc(100% - 62px);
+        margin-left: 62px;
+    }
+
+    .app-shell.sidebar-collapsed .nav-item {
+        padding-left: 6px;
+        padding-right: 6px;
+    }
+}
+/* =========================================================
+   MOBILE SIDEBAR — KEEP LOGO PERFECTLY CENTERED
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    .brand {
+        position: relative;
+        width: 100%;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .brand-icon-wrap {
+        position: relative;
+        width: 36px;
+        height: 36px;
+        flex: 0 0 36px;
+    }
+
+    .brand-text-link {
+        display: none;
+    }
+
+    /*
+       Do not let the sidebar button participate
+       in the mobile brand layout.
+    */
+    .sidebar-toggle {
+        position: absolute;
+        width: 36px;
+        height: 36px;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        margin: 0;
+        flex: none;
+    }
+
+    /*
+       Keep the button hidden until the logo area
+       is interacted with.
+    */
+    .app-shell:not(.sidebar-collapsed) .sidebar-toggle {
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    /*
+       When collapsed, the button overlays the logo
+       instead of appearing beside it.
+    */
+    .app-shell.sidebar-collapsed .sidebar-toggle {
+        position: absolute;
+        inset: 0;
+
+        width: 36px;
+        height: 36px;
+
+        margin: 0;
+        transform: none;
+
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .app-shell.sidebar-collapsed .brand-icon-wrap:hover .sidebar-toggle {
+        opacity: 1;
+        pointer-events: auto;
+    }
+}
+/* =========================================================
+   TABLET / SMALL DESKTOP — KEEP BRAND TEXT TOGETHER
+   ========================================================= */
+@media (min-width: 701px) and (max-width: 1100px) {
+    .brand {
+        flex-wrap: nowrap;
+    }
+    .brand-text-link {
+        flex: 1 1 auto;
+        min-width: 0;
+        overflow: hidden;
+    }
+    .brand-text {
+        min-width: 0;
+        overflow: hidden;
+    }
+    .brand-name {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .brand-tagline {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .sidebar-toggle {
+        margin-left: auto;   /* pushes it all the way to the right edge */
+        flex-shrink: 0;
+    }
+}
+input[type="datetime-local"] {
+    color-scheme: dark;
+}
+.avatar-page{display:grid;grid-template-columns:260px 1fr;gap:24px;max-width:760px;margin:0 auto}
+.avatar-preview{padding:20px;border:1px solid var(--border);border-radius:16px;background:rgba(18,24,48,.7)}
+.avatar-preview svg{width:100%;height:auto}
+.avatar-field{display:block;margin-bottom:14px;color:var(--text-secondary);font-size:12px}
+.avatar-field input[type="color"]{padding:2px;height:40px;cursor:pointer}
+.avatar-field input[type="checkbox"]{width:auto;min-height:0;margin-left:8px}
+.avatar-field select{width:100%;margin-top:6px;min-height:44px;padding:0 10px;border-radius:9px;background:#11162b;color:#fff;border:1px solid var(--border)}
+@media(max-width:700px){.avatar-page{grid-template-columns:1fr}}

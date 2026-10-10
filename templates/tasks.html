@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}My Tasks - MiniTask{% endblock %}
+{% block title %}My Tasks - Nivqora Task{% endblock %}
 
 {% block content %}
 
@@ -12,6 +12,7 @@
         {% csrf_token %}
 
         {{ form.title }}
+        {{ form.due_at }}
 
         <button type="submit">
             Add Task
@@ -29,6 +30,9 @@
 
             <span class="{% if task.completed %}completed{% endif %}">
                 {{ task.title }}
+                {% if task.due_at %}
+                    <br><small>Due {{ task.due_at|date:"d M, H:i" }}</small>
+                {% endif %}
             </span>
 
             <div>

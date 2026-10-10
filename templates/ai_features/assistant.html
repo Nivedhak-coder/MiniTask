@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}AI Assistant - Nivqora Task{% endblock %}
+
+{% block content %}
+
+<section class="ai-page">
+
+    <div class="ai-page-header">
+
+        <span class="ai-page-badge">
+            ✦ AI POWERED
+        </span>
+
+        <h1>
+            AI Task
+            <span>Intelligence</span>
+        </h1>
+
+        <p>
+            Turn your goals into clear, actionable tasks
+            with intelligent assistance.
+        </p>
+
+    </div>
+
+
+    <div class="ai-planner-card">
+
+        <div class="ai-card-header">
+            <div>
+                <span class="card-kicker">
+                    YOUR GOAL
+                </span>
+
+                <h2>
+                    What do you want to accomplish?
+                </h2>
+            </div>
+
+            <div class="ai-card-icon">
+                ✦
+            </div>
+        </div>
+
+
+        <div class="ai-input-wrapper">
+
+            <textarea
+                id="ai-goal"
+                name="goal"
+                rows="5"
+                placeholder="Example: Build a portfolio website..."
+            ></textarea>
+
+            <div class="ai-input-footer">
+
+                <span>
+                    Describe your goal in your own words.
+                </span>
+
+                <button
+                    type="button"
+                    class="ai-breakdown-button"
+                    id="ai-breakdown-button"
+                >
+                    ✦ Break it down
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="ai-result-card" id="ai-result-card">
+
+        <div class="ai-result-empty">
+
+            <div class="ai-result-icon">
+                ✦
+            </div>
+
+            <h3>
+                Your AI plan will appear here
+            </h3>
+
+            <p>
+                Enter a goal above and Nivqora will
+                help turn it into manageable steps.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}
