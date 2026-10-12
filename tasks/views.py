@@ -39,10 +39,7 @@ def home(request):
         overdue_count = open_due.filter(due_at__lt=now).count()
         due_today = open_due.filter(due_at__gte=now, due_at__date=today).count()
         p = Profile.objects.filter(user=request.user).first()
-        avatar = {
-            "skin": p.skin, "hair": p.hair, "eyes": p.eyes, "lips": p.lips, "outfit": p.outfit,
-            "hair_style": p.hair_style, "glasses": p.glasses, "beard": p.beard,
-        } if p else None
+        avatar = avatar_data(p) if p else None
         context = {
             "total_tasks": total_tasks,
             "completed_tasks": completed_tasks,
@@ -214,12 +211,7 @@ def reminders_api(request):
     return JsonResponse({
         "username": profile.user.username,
         "update": {"version": settings.COMPANION_VERSION, "url": settings.COMPANION_DOWNLOAD_URL},
-        "avatar": {
-            "skin": profile.skin, "hair": profile.hair, "eyes": profile.eyes, "lips": profile.lips,
-            "outfit": profile.outfit, "hair_style": profile.hair_style,
-            "glasses": profile.glasses, "beard": profile.beard,
-            "tone": profile.tone,
-        },
+        "avatar": {**avatar_data(profile), "tone": profile.tone},
         "reminders": [
             {"id": t.id, "title": t.title,
             "due": timezone.localtime(t.due_at).strftime("%H:%M"),
@@ -307,3 +299,10 @@ def api_profile(request):
         except ValueError:
             pass
     return profile
+
+AVATAR_FIELDS = ["skin", "hair", "eyes", "lips", "outfit", "accent", "hair_style", "face",
+                 "eye_style", "outfit_style", "accessory", "glasses", "beard"]
+
+
+def avatar_data(p):
+    return {f: getattr(p, f) for f in AVATAR_FIELDS}

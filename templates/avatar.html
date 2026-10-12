@@ -9,6 +9,10 @@
     <form method="POST" class="card avatar-form">
         {% csrf_token %}
         <h2>Your Character</h2>
+        <div class="avatar-tools">
+            <button type="button" id="avatar-random">🎲 Randomize</button>
+            <button type="button" id="avatar-reset">Undo changes</button>
+        </div>
         {% for field in form %}
             <label class="avatar-field">{{ field.label }} {{ field }}</label>
         {% endfor %}

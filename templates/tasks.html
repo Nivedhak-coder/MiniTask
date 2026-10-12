@@ -4,35 +4,51 @@
 
 {% block content %}
 
-<div class="card">
+<div class="tasks-page">
 
-    <h2>My Tasks</h2>
+    <div class="card">
+        <h2>My Tasks</h2>
 
-    <form method="POST">
-        {% csrf_token %}
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.title }}
+            {{ form.due_at }}
+            {{ form.remind_before }}
+            {{ form.repeat }}
 
-        {{ form.title }}
-        {{ form.due_at }}
-        {{ form.remind_before }}
-         {{ form.repeat }}
+            <button type="submit">Add Task</button>
+        </form>
+    </div>
 
-        <button type="submit">
-            Add Task
-        </button>
-    </form>
+    {% if q %}
+        <p class="search-note">
+            Results for "{{ q }}" ·
+            <a href="{% url 'tasks' %}">Clear</a>
+        </p>
+    {% endif %}
+
+    <div class="tasks-list">
+        {% for label, items in groups %}
+            <div class="task-group group-{{ label|slugify }}">
+                <h3 class="task-group-title">
+                    {{ label }} <small>{{ items|length }}</small>
+                </h3>
+
+                {% for task in items %}
+                    {% include "task_row.html" %}
+                {% endfor %}
+            </div>
+        {% empty %}
+            <p>
+                {% if q %}
+                    No tasks match "{{ q }}".
+                {% else %}
+                    No tasks yet.
+                {% endif %}
+            </p>
+        {% endfor %}
+    </div>
 
 </div>
 
-{% if q %}<p class="search-note">Results for "{{ q }}" · <a href="{% url 'tasks' %}">Clear</a></p>{% endif %}
-    {% for label, items in groups %}
-        <div class="task-group group-{{ label|slugify }}">
-            <h3 class="task-group-title">{{ label }} <small>{{ items|length }}</small></h3>
-            {% for task in items %}
-                {% include "task_row.html" %}
-            {% endfor %}
-        </div>
-    {% empty %}
-        <p>{% if q %}No tasks match "{{ q }}".{% else %}No tasks yet.{% endif %}</p>
-    {% endfor %}
-</div>
 {% endblock %}

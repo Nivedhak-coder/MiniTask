@@ -1,3 +1,5 @@
+import re
+
 from django import forms
 from .models import Task, Profile
 
@@ -30,5 +32,13 @@ class TaskForm(forms.ModelForm):
 class AvatarForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ["skin", "hair", "eyes", "lips", "outfit", "hair_style", "glasses", "beard", "tone"]
-        widgets = {f: forms.TextInput(attrs={"type": "color"}) for f in ["skin", "hair", "eyes", "lips", "outfit"]}
+        fields = ["skin", "face", "eyes", "eye_style", "lips", "hair", "hair_style", "outfit",
+                  "outfit_style", "accessory", "accent", "glasses", "beard", "tone"]
+        widgets = {f: forms.TextInput(attrs={"type": "color"}) for f in ["skin", "hair", "eyes", "lips", "outfit", "accent"]}
+
+    def clean(self):
+        d = super().clean()
+        for f in ("skin", "hair", "eyes", "lips", "outfit", "accent"):
+            if not re.fullmatch(r"#[0-9a-fA-F]{6}", d.get(f) or ""):
+                self.add_error(f, "Pick a valid color.")
+        return d

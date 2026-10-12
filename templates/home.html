@@ -252,49 +252,7 @@
             </div>
         </div>
     </section>
-    <!-- ================= AI PANEL ================= -->
-    <section class="ai-dashboard-card">
-        <div class="ai-glow"></div>
-        <div class="ai-content">
-            <div class="ai-badge">
-                ✦ AI POWERED
-            </div>
-            <h2>
-                Work smarter with
-                <span>AI assistance.</span>
-            </h2>
-            <p>
-                Break complicated goals into manageable tasks,
-                create focused plans, and get intelligent
-                productivity suggestions.
-            </p>
-            <div class="ai-features">
-                <div class="ai-feature">
-                    <span>✦</span>
-                    Smart task breakdown
-                </div>
-                <div class="ai-feature">
-                    <span>✦</span>
-                    AI daily planning
-                </div>
-                <div class="ai-feature">
-                    <span>✦</span>
-                    Productivity insights
-                </div>
-            </div>
-            <button class="ai-launch-button" type="button">
-                ✦ AI Assistant
-                <span>Coming soon</span>
-            </button>
-        </div>
-        <div class="ai-orbit">
-            <div class="orbit-ring orbit-one"></div>
-            <div class="orbit-ring orbit-two"></div>
-            <div class="ai-core">
-                ✦
-            </div>
-        </div>
-    </section>
+   
     <!-- ================= QUICK ACTIONS ================= -->
     <section class="quick-section">
         <div class="section-heading">
@@ -324,40 +282,26 @@
                     →
                 </span>
             </a>
-            <div class="quick-card quick-disabled">
+            <a href="/tasks/avatar/" class="quick-card">
                 <div class="quick-icon ai-bg">
-                    ✦
+                    ☺
                 </div>
                 <div>
                     <strong>
-                        Ask AI
+                        My character
                     </strong>
                     <span>
-                        Get intelligent assistance
+                        Customize your desktop assistant
                     </span>
                 </div>
-                <span class="coming-label">
-                    SOON
+                <span class="quick-arrow">
+                    →
                 </span>
-            </div>
-            <div class="quick-card quick-disabled">
-                <div class="quick-icon blue-bg">
-                    ◫
-                </div>
-                <div>
-                    <strong>
-                        View analytics
-                    </strong>
-                    <span>
-                        Understand your productivity
-                    </span>
-                </div>
-                <span class="coming-label">
-                    SOON
-                </span>
-            </div>
+            </a>
+            
         </div>
     </section>
+</div>
     {% else %}
     <!-- ================= LOGGED OUT LANDING ================= -->
     <section class="landing-hero">
@@ -395,9 +339,9 @@
         </div>
         <div class="feature-preview-card">
             <span>✦</span>
-            <strong>AI Productivity</strong>
+            <strong>Desktop Reminders</strong>
             <p>
-                Intelligent assistance is coming soon.
+                Your own cartoon character reminds you on your Windows desktop.
             </p>
         </div>
         <div class="feature-preview-card">
@@ -408,6 +352,5 @@
             </p>
         </div>    
     </section>
-    {% endif %}
-</div>
+{% endif %}
 {% endblock %}

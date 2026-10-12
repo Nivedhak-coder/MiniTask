@@ -28,10 +28,21 @@ class Profile(models.Model):
     hair = models.CharField(max_length=7, default="#2b1b12")
     eyes = models.CharField(max_length=7, default="#111111")
     lips = models.CharField(max_length=7, default="#d9777f")
+    accent = models.CharField("Accessory color", max_length=7, default="#7657ff")
+    face = models.CharField(max_length=8, default="oval", choices=[
+        ("oval", "Oval"), ("round", "Round"), ("square", "Square")])
+    eye_style = models.CharField(max_length=8, default="round", choices=[
+        ("round", "Round"), ("big", "Big"), ("narrow", "Narrow")])
+    outfit_style = models.CharField(max_length=8, default="tee", choices=[
+        ("tee", "T-shirt"), ("hoodie", "Hoodie"), ("collar", "Collared shirt")])
+    accessory = models.CharField(max_length=10, default="none", choices=[
+        ("none", "None"), ("cap", "Cap"), ("headband", "Headband"),
+        ("headphones", "Headphones"), ("earrings", "Earrings")])
     outfit = models.CharField(max_length=7, default="#7657ff")
     hair_style = models.CharField(max_length=10, default="short", choices=[
         ("short", "Short"), ("long", "Long"), ("bun", "Bun"),
-        ("curly", "Curly"), ("bald", "Bald")])
+        ("curly", "Curly"), ("bald", "Bald"), ("bob", "Bob"),
+        ("ponytail", "Ponytail"), ("afro", "Afro"), ("spiky", "Spiky")])
     glasses = models.BooleanField(default=False)
     beard = models.BooleanField(default=False)
     token = models.CharField(max_length=64, blank=True, db_index=True)
