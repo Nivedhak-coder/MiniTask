@@ -7,6 +7,7 @@
     <title>{% block title %}MiniTask{% endblock %}</title>
     <meta name="description"
           content="Nivqora Task- A modern productivity and task management platform">
+    <script>try{document.documentElement.dataset.theme=localStorage.getItem("theme")||"dark"}catch(e){}</script>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
@@ -120,16 +121,19 @@
                         </span>
                     </div>
                 </div>
-                <a href="/logout/" class="nav-item logout-item">
-                    <span class="nav-icon">
-                        <svg viewBox="0 0 24 24" aria-hidden="true">
-                            <path d="M10 17l5-5-5-5"></path>
-                            <path d="M15 12H3"></path>
-                            <path d="M21 4v16"></path>
-                        </svg>
-                    </span>
-                    <span>Logout</span>
-                </a>
+                <form method="POST" action="/logout/" class="logout-form">
+                    {% csrf_token %}
+                    <button type="submit" class="nav-item logout-item">
+                        <span class="nav-icon">
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M10 17l5-5-5-5"></path>
+                                <path d="M15 12H3"></path>
+                                <path d="M21 4v16"></path>
+                            </svg>
+                        </span>
+                        <span>Logout</span>
+                    </button>
+                </form>
             {% else %}
                 <a href="/login/" class="nav-item">
                     <span class="nav-icon">
@@ -177,7 +181,7 @@
                 </a>
             </div>
             <!-- SEARCH -->
-            <div class="global-search">
+            <form class="global-search" method="get" action="/tasks/">
                 <span class="search-icon">
                     <svg viewBox="0 0 24 24" aria-hidden="true">
                         <circle cx="11" cy="11" r="6"></circle>
@@ -186,24 +190,38 @@
                 </span>
                 <input
                     type="text"
-                    placeholder="Search tasks, categories..."
+                    name="q"
+                    value="{{ request.GET.q }}"
+                    placeholder="Search tasks..."
                     aria-label="Search"
+                    autocomplete="off"
+                    id="search-input"
                 >
                 <span class="search-shortcut">
                     /
                 </span>
-            </div>
+            </form>
             <!-- TOPBAR ACTIONS -->
             <div class="topbar-actions">
-                <!-- Notification -->
-                <button class="icon-button notification-button"
+                <div class="bell-panel" id="bell-panel" hidden>
+                    <div class="bell-title">Due soon</div>
+                    {% for t in bell_tasks %}
+                        <a href="/tasks/" class="bell-item{% if t.overdue %} overdue{% endif %}">
+                            <strong>{{ t.title }}</strong>
+                            <span>{% if t.overdue %}Overdue · {% endif %}{{ t.due_at|date:"d M, H:i" }}</span>
+                        </a>
+                    {% empty %}
+                        <div class="bell-empty">{% if user.is_authenticated %}Nothing due in the next 24 hours.{% else %}Log in to see your reminders.{% endif %}</div>
+                    {% endfor %}
+                </div>
+                <button class="icon-button notification-button" id="bell-btn"
                         type="button"
                         aria-label="Notifications">
                     <svg viewBox="0 0 24 24" aria-hidden="true">
                         <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path>
                         <path d="M10 21h4"></path>
                     </svg>
-                    <span class="notification-dot"></span>
+                    {% if bell_count %}<span class="notification-dot"></span>{% endif %}
                 </button>
                 {% if user.is_authenticated %}
                     <div class="top-user">
@@ -249,6 +267,23 @@
     </div>    
 </div>
 <script>
+    const bellBtn = document.getElementById("bell-btn");
+    const bellPanel = document.getElementById("bell-panel");
+    bellBtn.addEventListener("click", e => { e.stopPropagation(); bellPanel.hidden = !bellPanel.hidden; });
+    document.addEventListener("click", e => { if (!bellPanel.contains(e.target)) bellPanel.hidden = true; });
+    document.addEventListener("keydown", e => {
+        if (e.key === "/" && !/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)) {
+            e.preventDefault();
+            document.getElementById("search-input").focus();
+        }
+    });
+    const themeToggle = document.getElementById("theme-toggle");
+    themeToggle.checked = document.documentElement.dataset.theme !== "light";
+    themeToggle.addEventListener("change", () => {
+        const t = themeToggle.checked ? "dark" : "light";
+        document.documentElement.dataset.theme = t;
+        try { localStorage.setItem("theme", t); } catch (e) {}
+    });
     const appShell = document.querySelector(".app-shell");
     const sidebarToggle = document.getElementById("sidebar-toggle");
 

@@ -1,0 +1,19 @@
+<div class="task">
+    <span class="{% if task.completed %}completed{% endif %}">
+        {{ task.title }}
+        {% if task.due_at %}
+            <br><small>Due {{ task.due_at|date:"d M, H:i" }}{% if task.remind_before %} · reminds {{ task.remind_before }} min before{% endif %}{% if task.repeat != "none" %} · {{ task.get_repeat_display }}{% endif %}</small>
+        {% endif %}
+    </span>
+    <div>
+        <form method="POST" action="{% url 'complete_task' task.id %}">
+            {% csrf_token %}
+            <button type="submit" class="link-btn">{% if task.completed %}Undo{% else %}Complete{% endif %}</button>
+        </form>
+        <a href="{% url 'edit_task' task.id %}">Edit</a>
+        <form method="POST" action="{% url 'delete_task' task.id %}" onsubmit="return confirm('Delete this task?')">
+            {% csrf_token %}
+            <button type="submit" class="link-btn danger">Delete</button>
+        </form>
+    </div>
+</div>

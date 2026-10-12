@@ -13,6 +13,12 @@ class Task(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     due_at = models.DateTimeField(null=True, blank=True)
     reminded = models.BooleanField(default=False)
+    remind_before = models.PositiveIntegerField(default=0)
+    repeat = models.CharField(max_length=10, default="none", choices=[
+    ("none", "Does not repeat"), ("daily", "Repeat daily"),
+    ("weekdays", "Repeat on weekdays"), ("weekly", "Repeat weekly")])
+    spawned = models.BooleanField(default=False)
+    remind_at = models.DateTimeField(null=True, blank=True)
     def __str__(self):
         return self.title
 
@@ -21,6 +27,7 @@ class Profile(models.Model):
     skin = models.CharField(max_length=7, default="#e0ac69")
     hair = models.CharField(max_length=7, default="#2b1b12")
     eyes = models.CharField(max_length=7, default="#111111")
+    lips = models.CharField(max_length=7, default="#d9777f")
     outfit = models.CharField(max_length=7, default="#7657ff")
     hair_style = models.CharField(max_length=10, default="short", choices=[
         ("short", "Short"), ("long", "Long"), ("bun", "Bun"),

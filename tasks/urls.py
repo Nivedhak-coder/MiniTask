@@ -19,4 +19,5 @@ urlpatterns = [
     path("api/reminders/", views.reminders_api, name="reminders_api"),
     path("avatar/token/", views.regenerate_token, name="regenerate_token"),
     path("api/reminders/<int:task_id>/<str:action>/", views.reminder_action, name="reminder_action"),
+        path("edit/<int:task_id>/", views.edit_task, name="edit_task"),
 ]

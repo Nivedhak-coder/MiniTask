@@ -15,8 +15,6 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
-from pathlib import Path
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -25,10 +23,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv( "SECRET_KEY", "django-insecure-development-key")
+SECRET_KEY = os.getenv("SECRET_KEY", "")
+if not SECRET_KEY:
+    if os.getenv("DEBUG", "False") == "True":
+        SECRET_KEY = "django-insecure-development-key"
+    else:
+        raise RuntimeError("SECRET_KEY environment variable is required when DEBUG is off")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("DEBUG", "True") == "True"
+DEBUG = os.getenv("DEBUG", "False") == "True"
 
 ALLOWED_HOSTS = [
     host.strip()
@@ -51,6 +54,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'tasks',
+    'ai_features',
 ]
 
 MIDDLEWARE = [
@@ -76,6 +80,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'tasks.context.bell',
             ],
         },
     },
@@ -162,3 +167,15 @@ AI_MODEL = os.getenv(
 CSRF_TRUSTED_ORIGINS = [
     o.strip() for o in os.getenv("CSRF_TRUSTED_ORIGINS", "").split(",") if o.strip()
 ]
+
+LOGIN_URL = "/login/"
+
+if not DEBUG:
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+    SECURE_SSL_REDIRECT = os.getenv("SECURE_SSL_REDIRECT", "True") == "True"
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_HSTS_SECONDS = 3600
+
+COMPANION_VERSION = os.getenv("COMPANION_VERSION", "1.0.0")
+COMPANION_DOWNLOAD_URL = os.getenv("COMPANION_DOWNLOAD_URL", "")

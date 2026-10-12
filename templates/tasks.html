@@ -13,6 +13,8 @@
 
         {{ form.title }}
         {{ form.due_at }}
+        {{ form.remind_before }}
+         {{ form.repeat }}
 
         <button type="submit">
             Add Task
@@ -21,44 +23,16 @@
 
 </div>
 
-
-<div class="task-list">
-
-    {% for task in tasks %}
-
-        <div class="task">
-
-            <span class="{% if task.completed %}completed{% endif %}">
-                {{ task.title }}
-                {% if task.due_at %}
-                    <br><small>Due {{ task.due_at|date:"d M, H:i" }}</small>
-                {% endif %}
-            </span>
-
-            <div>
-
-                <a href="{% url 'complete_task' task.id %}">
-                    {% if task.completed %}
-                        Undo
-                    {% else %}
-                        Complete
-                    {% endif %}
-                </a>
-
-                <a href="{% url 'delete_task' task.id %}">
-                    Delete
-                </a>
-
-            </div>
-
+{% if q %}<p class="search-note">Results for "{{ q }}" · <a href="{% url 'tasks' %}">Clear</a></p>{% endif %}
+    {% for label, items in groups %}
+        <div class="task-group group-{{ label|slugify }}">
+            <h3 class="task-group-title">{{ label }} <small>{{ items|length }}</small></h3>
+            {% for task in items %}
+                {% include "task_row.html" %}
+            {% endfor %}
         </div>
-
     {% empty %}
-
-        <p>No tasks yet.</p>
-
+        <p>{% if q %}No tasks match "{{ q }}".{% else %}No tasks yet.{% endif %}</p>
     {% endfor %}
-
 </div>
-
 {% endblock %}

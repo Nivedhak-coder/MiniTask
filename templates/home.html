@@ -1,8 +1,10 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}Dashboard - Nivqora Task{% endblock %}
 
 {% block content %}
+{% if user.is_authenticated %}
 
 <div class="dashboard">
     <!-- ================= WELCOME ================= -->
@@ -48,7 +50,32 @@
             {% endif %}
         </div>
     </section>
-    {% if user.is_authenticated %}
+    <section class="companion-card">
+        {% if avatar %}
+            <div class="companion-avatar" id="companion-avatar"></div>
+            <div class="companion-bubble">
+                {% if overdue_count %}
+                    You have {{ overdue_count }} overdue task{{ overdue_count|pluralize }}. Let's clear {{ overdue_count|pluralize:"it,them" }}!
+                {% elif due_today %}
+                    {{ due_today }} task{{ due_today|pluralize }} due today. You've got this!
+                {% else %}
+                    Nothing due today. Enjoy the calm!
+                {% endif %}
+                <small>I'll remind you on your desktop too.</small>
+            </div>
+            {{ avatar|json_script:"avatar-data" }}
+            <script src="{% static 'js/avatar.js' %}"></script>
+            <script>
+                document.getElementById("companion-avatar").innerHTML =
+                    avatarSVG(JSON.parse(document.getElementById("avatar-data").textContent));
+            </script>
+        {% else %}
+            <div class="companion-bubble">
+                Create your own character to get reminders on your desktop.
+                <small><a href="/tasks/avatar/">Create my character →</a></small>
+            </div>
+        {% endif %}
+    </section>
     <!-- ================= STATISTICS ================= -->
 <section class="stats-grid">
     <div class="stat-card">
@@ -379,7 +406,7 @@
             <p>
                 Designed to keep distractions away.
             </p>
-        </div>
+        </div>    
     </section>
     {% endif %}
 </div>
