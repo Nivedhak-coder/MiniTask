@@ -207,16 +207,29 @@ def reminders_api(request):
         user=profile.user, completed=False, reminded=False, due_at__isnull=False,
     ))
     Task.objects.filter(id__in=[t.id for t in due]).update(reminded=True)
+    soon = Task.objects.filter(
+        Q(remind_at__gt=now, remind_at__lte=now + timedelta(days=7)) |
+        Q(remind_at__isnull=True, due_at__gt=now, due_at__lte=now + timedelta(days=7)),
+        user=profile.user, completed=False, reminded=False, due_at__isnull=False,
+    )
 
     return JsonResponse({
         "username": profile.user.username,
         "update": {"version": settings.COMPANION_VERSION, "url": settings.COMPANION_DOWNLOAD_URL},
+        "upcoming": [
+            {"id": t.id, "title": t.title,
+             "due": timezone.localtime(t.due_at).strftime("%H:%M"),
+             "due_iso": t.due_at.isoformat(),
+             "at": (t.remind_at or t.due_at).isoformat()}
+            for t in soon
+        ],
         "avatar": {**avatar_data(profile), "tone": profile.tone},
         "reminders": [
             {"id": t.id, "title": t.title,
             "due": timezone.localtime(t.due_at).strftime("%H:%M"),
             "late": now - t.due_at > timedelta(minutes=10),
-             "mins": int((t.due_at - now).total_seconds() // 60)}
+            "mins": int((t.due_at - now).total_seconds() // 60),
+             "due_iso": t.due_at.isoformat()}
             for t in due
         ],
     })
@@ -233,6 +246,8 @@ def reminder_action(request, task_id, action):
         return JsonResponse({"error": "not found"}, status=404)
     if action == "done":
         task.completed = True
+    elif action == "ack":
+        task.reminded = True
     elif action == "snooze":
         task.remind_at = timezone.now() + timedelta(minutes=10)
         task.reminded = False
