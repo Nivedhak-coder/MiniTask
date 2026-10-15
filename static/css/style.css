@@ -176,17 +176,7 @@ input {
     color: white;
     transform: translateX(2px);
 }
-.nav-item:first-of-type {
-    background:
-        linear-gradient(
-            100deg,
-            rgba(118, 87, 255, 0.95),
-            rgba(91, 63, 224, 0.88)
-        );
-    color: white;
-    box-shadow:
-        0 10px 25px rgba(91, 63, 224, 0.22);
-}
+
 .nav-icon {
     width: 19px;
     height: 19px;
@@ -2290,4 +2280,36 @@ html[data-theme="light"] .avatar-tools button{color:#5b3fe0}
 .tasks-page > .task-group:first-of-type {
     margin-top: 30px;
 }
+.app-steps{display:block;margin:0 0 10px;color:var(--text-secondary);font-size:12px;line-height:1.6}
+label.app-steps{margin:14px 0 6px}
+ 
+.card:has(select[name="remind_before"]) form label{display:flex;flex-direction:column;gap:6px;min-width:0;color:var(--text-secondary);font-size:11px;font-weight:600}
+.card:has(select[name="remind_before"]) form label.f-wide{grid-column:1/-1}
 
+.card:has(#id_password2) h2{margin-bottom:18px}
+.card .field{margin-bottom:16px}
+.card .field label{display:block;margin-bottom:6px;color:var(--text-secondary);font-size:12px;font-weight:600}
+.card .field input{margin-bottom:0}
+.card .field small{display:block;margin-top:6px;color:var(--text-muted);font-size:11px;line-height:1.5}
+.card .field-error{margin:6px 0 0;color:var(--danger);font-size:11px}
+.card .field.has-error input{border-color:rgba(255,102,125,.5)}
+.card:has(#id_password2) form button{margin-top:6px}
+.card:has(#id_password2)>p{margin:18px 0 0;text-align:center;color:var(--text-secondary);font-size:12px}
+.card:has(#id_password2)>p a{color:#a994ff;font-weight:600;text-decoration:none}
+.card:has(#id_password2)>p a:hover{color:#fff}
+
+/* logout + theme toggle centered in the narrow sidebar */
+@media(max-width:700px){
+  button.nav-item.logout-item{justify-content:center;padding:11px 8px;gap:0}
+  .theme-row{flex-direction:column;justify-content:center;gap:8px;padding:12px 0}
+  .theme-label{justify-content:center}
+}
+.app-shell.sidebar-collapsed button.nav-item.logout-item{justify-content:center;padding:11px 8px;gap:0}
+.app-shell.sidebar-collapsed .theme-row{flex-direction:column;justify-content:center;gap:8px;padding:12px 0}
+
+/* "No tasks yet" centered */
+.task-list>p{margin:0;padding:28px 0;text-align:center;color:var(--text-secondary);font-size:13px}
+
+/* quick actions: slightly bigger text */
+.quick-card strong{font-size:13px}
+.quick-card span:not(.quick-arrow):not(.coming-label){font-size:10.5px}

@@ -20,7 +20,14 @@
     </form>
 </div>
 <div class="card" style="margin-top:20px">
-    <h2>Desktop app key</h2>
+    <h2>Desktop app</h2>
+    {% if companion_url %}
+    <p><a class="primary-action" href="{{ companion_url }}" target="_blank" rel="noopener">⬇ Download for Windows</a></p>
+    {% endif %}
+    <p class="app-steps">Install it, then enter the address and key below. If Windows shows "Windows protected your PC", click <strong>More info → Run anyway</strong>.</p>
+    <label class="app-steps">Site address</label>
+    <input type="text" value="{{ request.scheme }}://{{ request.get_host }}" readonly onclick="this.select()">
+    <label class="app-steps">Your key</label>
     <input type="text" value="{{ token }}" readonly onclick="this.select()">
     <form method="POST" action="{% url 'regenerate_token' %}">
         {% csrf_token %}

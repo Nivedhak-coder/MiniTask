@@ -7,10 +7,10 @@
     <h2>Edit Task</h2>
     <form method="POST">
         {% csrf_token %}
-        {{ form.title }}
-        {{ form.due_at }}
-        {{ form.remind_before }}
-        {{ form.repeat }}
+        <label class="f-wide">Task {{ form.title }}</label>
+        <label>Due date &amp; time {{ form.due_at }}</label>
+        <label>Remind me {{ form.remind_before }}</label>
+        <label>Repeat {{ form.repeat }}</label>
         <button type="submit">Save changes</button>
     </form>
     <p><a href="{% url 'tasks' %}">Cancel</a></p>

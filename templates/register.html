@@ -11,7 +11,24 @@
     <form method="POST">
         {% csrf_token %}
 
-        {{ form.as_p }}
+        <div class="field{% if form.username.errors %} has-error{% endif %}">
+            <label for="id_username">Username</label>
+            {{ form.username }}
+            <small>Letters, numbers and @ . + - _ only.</small>
+            {% for e in form.username.errors %}<p class="field-error">{{ e }}</p>{% endfor %}
+        </div>
+        <div class="field{% if form.password1.errors %} has-error{% endif %}">
+            <label for="id_password1">Password</label>
+            {{ form.password1 }}
+            <small>At least 8 characters. Avoid common passwords or only numbers.</small>
+            {% for e in form.password1.errors %}<p class="field-error">{{ e }}</p>{% endfor %}
+        </div>
+        <div class="field{% if form.password2.errors %} has-error{% endif %}">
+            <label for="id_password2">Confirm password</label>
+            {{ form.password2 }}
+            {% for e in form.password2.errors %}<p class="field-error">{{ e }}</p>{% endfor %}
+        </div>
+        {% for e in form.non_field_errors %}<p class="error">{{ e }}</p>{% endfor %}
 
         <button type="submit">
             Register
